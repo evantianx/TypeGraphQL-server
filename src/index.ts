@@ -15,7 +15,10 @@ import { MeResolver } from "./modules/user/Me";
 const main = async () => {
   await createConnection();
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver]
+    resolvers: [RegisterResolver, LoginResolver, MeResolver],
+    authChecker: ({ context: { req } }) => {
+      return !!req.session.userId;
+    }
   });
 
   const apolloServer = new ApolloServer({
