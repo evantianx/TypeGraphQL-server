@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType, Root } from "type-graphql";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
+  // Field is for GraphQL query and column is for database
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,6 +16,11 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   lastName: string;
+
+  @Field()
+  name(@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`;
+  }
 
   @Field()
   @Column("text", { unique: true })
